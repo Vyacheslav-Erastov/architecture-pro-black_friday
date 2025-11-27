@@ -212,6 +212,24 @@ sh.splitAt("mobilemir_db.products", { category: "Электроника", _id: O
 sh.moveChunk("mobilemir_db.products", { category: "Электроника", _id: ObjectId("...") }, "shard002")
 ```
 
+#### 5. Использование zoned awared sharding
+
+Можно создать отдельную зону для горячей категории, тем самым изолируя нагрузку от других шардов и масштабируя шарды внутри конкретной зоны
+
+Пример:
+
+```
+sh.addShardTag("shard1", "electronics");
+sh.addShardTag("shard2", "electronics");
+
+sh.addTagRange( 
+	"mobilemir_db.products", 
+	{ "category" : "Электроника" },
+	{ "category" : "Электроника" }, 
+	"electronics" 
+)
+```
+
 # Задание 9. Настройка чтения с реплик и консистентность
 
 ### Таблица с операциями чтения и указанием, должны ли они идти на primary или secondary
